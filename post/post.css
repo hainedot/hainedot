@@ -1,0 +1,253 @@
+/* 下書きページ — ファインダーの見た目を借りつつ編集しやすい余白 */
+
+.post-page {
+  min-height: 100vh;
+  padding: 2.5rem 1.5rem 4rem;
+  background:
+    radial-gradient(ellipse at 30% 0%, #1a1816 0%, var(--bg) 55%);
+  color: var(--text);
+  overflow: auto;
+}
+
+.post-header {
+  max-width: 1080px;
+  margin: 0 auto 2.5rem;
+  text-align: center;
+}
+
+.post-kicker {
+  font-family: "Courier New", monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.28em;
+  color: var(--finder-green);
+  margin-bottom: 0.85rem;
+}
+
+.post-brand {
+  font-size: 1.1rem;
+  letter-spacing: 0.35em;
+  color: var(--finder-green-bright);
+  font-weight: 400;
+  margin-bottom: 0.85rem;
+}
+
+.post-lead {
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  line-height: 2.2;
+  color: var(--text-muted);
+  max-width: 28rem;
+  margin: 0 auto;
+}
+
+.post-layout {
+  max-width: 1080px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 440px);
+  gap: 2.5rem;
+  align-items: start;
+}
+
+.post-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+}
+
+.post-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.post-field > span {
+  font-family: "Courier New", monospace;
+  font-size: 0.52rem;
+  letter-spacing: 0.2em;
+  color: var(--finder-green);
+}
+
+.post-field small {
+  font-size: 0.52rem;
+  letter-spacing: 0.08em;
+  color: rgba(232, 228, 220, 0.4);
+  line-height: 1.7;
+}
+
+.post-field input[type="text"],
+.post-field input[type="date"],
+.post-field input[type="number"],
+.post-field textarea {
+  width: 100%;
+  border: 1px solid rgba(160, 210, 170, 0.22);
+  background: rgba(8, 10, 9, 0.65);
+  color: var(--text);
+  font-family: var(--font-main);
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  padding: 0.75rem 0.9rem;
+  border-radius: 2px;
+  outline: none;
+  transition: border-color 0.25s ease;
+}
+
+.post-field textarea {
+  resize: vertical;
+  min-height: 9rem;
+  line-height: 2.1;
+}
+
+.post-field input:focus,
+.post-field textarea:focus {
+  border-color: rgba(190, 235, 200, 0.55);
+}
+
+.post-field input[type="file"] {
+  font-size: 0.58rem;
+  color: var(--text-muted);
+}
+
+.post-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 0.4rem;
+}
+
+.post-btn {
+  border: 1px solid rgba(190, 235, 200, 0.35);
+  background: rgba(190, 235, 200, 0.08);
+  color: var(--finder-green-bright);
+  font-family: var(--font-main);
+  font-size: 0.58rem;
+  letter-spacing: 0.14em;
+  padding: 0.7rem 1.1rem;
+  cursor: pointer;
+  transition: background 0.25s ease, color 0.25s ease;
+}
+
+.post-btn:hover {
+  background: rgba(190, 235, 200, 0.16);
+}
+
+.post-btn-ghost {
+  background: transparent;
+  border-color: rgba(232, 228, 220, 0.2);
+  color: var(--text-muted);
+}
+
+.post-btn-accent {
+  background: rgba(190, 235, 200, 0.18);
+}
+
+.post-status {
+  min-height: 1.4rem;
+  font-size: 0.55rem;
+  letter-spacing: 0.1em;
+  color: var(--finder-green);
+}
+
+.post-help {
+  margin-top: 0.5rem;
+  border-top: 1px solid rgba(160, 210, 170, 0.12);
+  padding-top: 1rem;
+}
+
+.post-help summary {
+  font-size: 0.58rem;
+  letter-spacing: 0.14em;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.post-help ol {
+  margin: 0.9rem 0 0;
+  padding-left: 1.2rem;
+  font-size: 0.58rem;
+  line-height: 2.2;
+  letter-spacing: 0.08em;
+  color: rgba(232, 228, 220, 0.62);
+}
+
+.post-help code {
+  font-family: "Courier New", monospace;
+  font-size: 0.9em;
+  color: var(--finder-green-bright);
+}
+
+.post-preview-wrap {
+  position: sticky;
+  top: 1.5rem;
+}
+
+.post-preview-label {
+  font-family: "Courier New", monospace;
+  font-size: 0.52rem;
+  letter-spacing: 0.22em;
+  color: var(--finder-green);
+  margin-bottom: 0.85rem;
+  text-align: center;
+}
+
+.post-finder {
+  width: 100%;
+  max-width: 440px;
+  margin: 0 auto;
+  height: auto;
+  aspect-ratio: 4 / 3;
+}
+
+.post-finder .poem-card {
+  opacity: 1;
+  pointer-events: none;
+}
+
+.post-output {
+  max-width: 1080px;
+  margin: 2.75rem auto 0;
+}
+
+.post-output-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.7rem;
+}
+
+.post-output-head p {
+  font-family: "Courier New", monospace;
+  font-size: 0.52rem;
+  letter-spacing: 0.2em;
+  color: var(--finder-green);
+}
+
+.post-code {
+  margin: 0;
+  padding: 1.1rem 1.2rem;
+  overflow: auto;
+  max-height: 22rem;
+  border: 1px solid rgba(160, 210, 170, 0.2);
+  background: rgba(6, 8, 7, 0.85);
+  color: rgba(210, 230, 215, 0.88);
+  font-family: "Courier New", monospace;
+  font-size: 0.62rem;
+  line-height: 1.65;
+  white-space: pre;
+  border-radius: 2px;
+}
+
+@media (max-width: 900px) {
+  .post-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .post-preview-wrap {
+    position: static;
+    order: -1;
+  }
+
+  .post-finder {
+    max-width: 360px;
+  }
+}
