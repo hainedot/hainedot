@@ -251,3 +251,59 @@
     max-width: 360px;
   }
 }
+
+@media (max-width: 600px) {
+  .post-page {
+    min-height: 100dvh;
+    padding:
+      calc(1.25rem + env(safe-area-inset-top, 0px))
+      1rem
+      calc(2.5rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  .post-header {
+    margin-bottom: 1.5rem;
+  }
+
+  .post-brand {
+    font-size: 0.95rem;
+  }
+
+  .post-lead {
+    font-size: 0.6rem;
+    line-height: 2;
+  }
+
+  .post-layout {
+    gap: 1.5rem;
+  }
+
+  .post-finder {
+    max-width: min(92vw, 360px);
+  }
+
+  .post-actions {
+    position: sticky;
+    bottom: calc(0.5rem + env(safe-area-inset-bottom, 0px));
+    z-index: 2;
+    padding: 0.5rem 0;
+    background: linear-gradient(to top, rgba(14, 13, 12, 0.96), rgba(14, 13, 12, 0.8) 70%, transparent);
+  }
+
+  .post-btn {
+    min-height: 40px;
+    flex: 1 1 auto;
+  }
+
+  .post-field input[type="text"],
+  .post-field input[type="date"],
+  .post-field input[type="number"],
+  .post-field textarea {
+    font-size: 16px;
+  }
+
+  .post-code {
+    font-size: 0.55rem;
+    max-height: 14rem;
+  }
+}
