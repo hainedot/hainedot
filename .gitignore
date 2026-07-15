@@ -1,1 +1,4 @@
 ﻿.vscode/
+worker/node_modules/
+worker/.publish-password.txt
+worker/.wrangler/

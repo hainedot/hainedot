@@ -1,0 +1,8 @@
+name = "hainedot-publish"
+main = "publish.js"
+compatibility_date = "2026-07-15"
+
+[vars]
+GITHUB_OWNER = "hainedot"
+GITHUB_REPO = "hainedot"
+GITHUB_BRANCH = "main"

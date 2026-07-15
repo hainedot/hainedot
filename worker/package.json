@@ -1,0 +1,11 @@
+{
+  "name": "hainedot-publish",
+  "private": true,
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "login": "wrangler login"
+  },
+  "devDependencies": {
+    "wrangler": "^4.28.0"
+  }
+}
