@@ -2,20 +2,14 @@
   "use strict";
 
   const STORAGE_KEY = "hainedot-post-draft";
-  const TOKEN_KEY = "hainedot-github-token";
-  const REPO_OWNER = "hainedot";
-  const REPO_NAME = "hainedot";
-  const BRANCH = "main";
-  const POEMS_PATH = "data/poems.json";
-  const API_BASE =
-    "https://api.github.com/repos/" + REPO_OWNER + "/" + REPO_NAME + "/contents/";
+  const PASSWORD_KEY = "hainedot-publish-password";
 
   const titleEl = document.getElementById("field-title");
   const dateEl = document.getElementById("field-date");
   const bodyEl = document.getElementById("field-body");
   const imageEl = document.getElementById("field-image");
   const imageFileEl = document.getElementById("field-image-file");
-  const tokenEl = document.getElementById("field-token");
+  const passwordEl = document.getElementById("field-password");
   const statusEl = document.getElementById("post-status");
   const publishBtn = document.getElementById("btn-publish");
 
@@ -127,6 +121,10 @@
     return safe || "poem.png";
   }
 
+  function getPublishUrl() {
+    return String(window.HAINEDOT_PUBLISH_URL || "").trim().replace(/\/$/, "");
+  }
+
   function getFormState() {
     const dateInfo = parseDate(dateEl.value);
     const imageName = (imageEl.value || "").trim().replace(/^\/+/, "");
@@ -173,8 +171,8 @@
     };
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
-      if (tokenEl.value.trim()) {
-        localStorage.setItem(TOKEN_KEY, tokenEl.value.trim());
+      if (passwordEl.value) {
+        localStorage.setItem(PASSWORD_KEY, passwordEl.value);
       }
       setStatus("この端末に下書きを保存しました");
     } catch (error) {
@@ -184,8 +182,8 @@
 
   function loadDraft() {
     try {
-      const token = localStorage.getItem(TOKEN_KEY);
-      if (token) tokenEl.value = token;
+      const password = localStorage.getItem(PASSWORD_KEY);
+      if (password) passwordEl.value = password;
 
       const raw = localStorage.getItem(STORAGE_KEY);
       if (!raw) return;
@@ -240,132 +238,25 @@
     updatePreview();
   }
 
-  function getToken() {
-    const token = tokenEl.value.trim();
-    if (token) {
-      try {
-        localStorage.setItem(TOKEN_KEY, token);
-      } catch (error) {
-        // ignore
-      }
-    }
-    return token;
-  }
-
-  function utf8ToBase64(text) {
-    const bytes = new TextEncoder().encode(text);
-    let binary = "";
-    bytes.forEach((b) => {
-      binary += String.fromCharCode(b);
-    });
-    return btoa(binary);
-  }
-
-  function base64ToUtf8(b64) {
-    const binary = atob(String(b64 || "").replace(/\n/g, ""));
-    const bytes = Uint8Array.from(binary, (c) => c.charCodeAt(0));
-    return new TextDecoder().decode(bytes);
-  }
-
-  function arrayBufferToBase64(buffer) {
-    const bytes = new Uint8Array(buffer);
-    let binary = "";
-    const chunk = 0x8000;
-    for (let i = 0; i < bytes.length; i += chunk) {
-      binary += String.fromCharCode.apply(null, bytes.subarray(i, i + chunk));
-    }
-    return btoa(binary);
-  }
-
-  async function githubRequest(path, options) {
-    const token = getToken();
-    if (!token) {
-      throw new Error("GitHub トークンを入力してください");
-    }
-
-    const response = await fetch(API_BASE + path, {
-      ...options,
-      headers: {
-        Accept: "application/vnd.github+json",
-        Authorization: "Bearer " + token,
-        "X-GitHub-Api-Version": "2022-11-28",
-        ...(options && options.headers ? options.headers : {}),
-      },
-    });
-
-    if (response.status === 404 && (!options || options.method === "GET")) {
-      return null;
-    }
-
-    if (!response.ok) {
-      let detail = "";
-      try {
-        const err = await response.json();
-        detail = err.message || "";
-      } catch (error) {
-        detail = "";
-      }
-      throw new Error(
-        "GitHub API エラー (" + response.status + ")" + (detail ? ": " + detail : "")
-      );
-    }
-
-    if (response.status === 204) return null;
-    return response.json();
-  }
-
-  async function getPoemsFile() {
-    return githubRequest(POEMS_PATH + "?ref=" + encodeURIComponent(BRANCH), {
-      method: "GET",
-    });
-  }
-
-  async function putFile(path, contentBase64, message, sha) {
-    const body = {
-      message: message,
-      content: contentBase64,
-      branch: BRANCH,
-    };
-    if (sha) body.sha = sha;
-
-    return githubRequest(path, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    });
-  }
-
-  async function ensureUniqueImageName(desiredName) {
-    let name = sanitizeFileName(desiredName);
-    const extMatch = name.match(/(\.[^.]+)$/);
-    const ext = extMatch ? extMatch[1] : ".png";
-    const base = extMatch ? name.slice(0, -ext.length) : name;
-    let attempt = name;
-    let n = 1;
-
-    while (n < 50) {
-      const existing = await githubRequest(
-        "images/" + encodeURIComponent(attempt) + "?ref=" + encodeURIComponent(BRANCH),
-        { method: "GET" }
-      );
-      if (!existing) return attempt;
-      attempt = base + "-" + n + ext;
-      n += 1;
-    }
-    return base + "-" + Date.now() + ext;
-  }
-
   async function publish() {
     if (isPublishing) return;
+
+    const publishUrl = getPublishUrl();
+    if (!publishUrl) {
+      setStatus("受付係の URL が未設定です。worker/SETUP.md を見て post/config.js を設定してください");
+      return;
+    }
 
     const state = getFormState();
     if (!state.lines.length) {
       setStatus("詩の本文を入力してください");
       return;
     }
-    if (!getToken()) {
-      setStatus("GitHub トークンを入力してください（初回だけ）");
-      tokenEl.focus();
+
+    const password = passwordEl.value;
+    if (!password) {
+      setStatus("合言葉を入力してください");
+      passwordEl.focus();
       return;
     }
 
@@ -380,46 +271,42 @@
     setStatus("公開しています…");
 
     try {
-      let imageName = state.image;
+      try {
+        localStorage.setItem(PASSWORD_KEY, password);
+      } catch (error) {
+        // ignore
+      }
 
+      const form = new FormData();
+      form.append("password", password);
+      form.append("title", state.title);
+      form.append("datetime", state.datetime);
+      form.append("displayDate", state.displayDate);
+      form.append("lines", JSON.stringify(state.lines));
+      form.append("imageName", state.image);
       if (file) {
-        setStatus("写真をアップロードしています…");
-        imageName = await ensureUniqueImageName(file.name || state.image);
-        const buffer = await file.arrayBuffer();
-        await putFile(
-          "images/" + imageName,
-          arrayBufferToBase64(buffer),
-          "Add poem image: " + imageName
-        );
-        imageEl.value = imageName;
+        form.append("image", file, file.name);
       }
 
-      setStatus("詩データを更新しています…");
-      const poemsFile = await getPoemsFile();
-      let poemsData = { poems: [] };
-      let sha = null;
-
-      if (poemsFile && poemsFile.content) {
-        sha = poemsFile.sha;
-        poemsData = JSON.parse(base64ToUtf8(poemsFile.content));
-        if (!Array.isArray(poemsData.poems)) poemsData.poems = [];
-      }
-
-      poemsData.poems.push({
-        title: state.title,
-        datetime: state.datetime,
-        displayDate: state.displayDate,
-        image: imageName,
-        lines: state.lines,
+      const response = await fetch(publishUrl, {
+        method: "POST",
+        body: form,
       });
 
-      const jsonText = JSON.stringify(poemsData, null, 2) + "\n";
-      await putFile(
-        POEMS_PATH,
-        utf8ToBase64(jsonText),
-        "Publish poem: " + state.title,
-        sha
-      );
+      let data = {};
+      try {
+        data = await response.json();
+      } catch (error) {
+        data = {};
+      }
+
+      if (!response.ok || !data.ok) {
+        throw new Error(data.error || "公開に失敗しました (" + response.status + ")");
+      }
+
+      if (data.image) {
+        imageEl.value = data.image;
+      }
 
       try {
         localStorage.removeItem(STORAGE_KEY);
@@ -427,9 +314,7 @@
         // ignore
       }
 
-      setStatus(
-        "公開しました。1〜2分後に https://hainedot.com/ に反映されます"
-      );
+      setStatus("公開しました。1〜2分後に https://hainedot.com/ に反映されます");
     } catch (error) {
       setStatus(error.message || "公開に失敗しました");
     } finally {
@@ -455,4 +340,8 @@
 
   loadDraft();
   updatePreview();
+
+  if (!getPublishUrl()) {
+    setStatus("まだ受付係が未設定です。worker/SETUP.md を開いてセットアップしてください");
+  }
 })();

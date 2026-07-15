@@ -6,7 +6,7 @@
   <meta name="robots" content="noindex, nofollow">
   <title>投稿 | hainedot</title>
   <link rel="stylesheet" href="../style.css?v=5">
-  <link rel="stylesheet" href="post.css?v=4">
+  <link rel="stylesheet" href="post.css?v=5">
 </head>
 <body class="post-page">
   <header class="post-header">
@@ -50,13 +50,9 @@
       </label>
 
       <label class="post-field">
-        <span>GitHub トークン（初回だけ）</span>
-        <input type="password" id="field-token" name="token" placeholder="github_pat_... または ghp_..." autocomplete="off">
-        <small>
-          GitHub → Settings → Developer settings → Personal access tokens で
-          <code>Contents: Read and write</code> 権限のトークンを作って貼る。
-          この端末にだけ保存されます。
-        </small>
+        <span>合言葉</span>
+        <input type="password" id="field-password" name="password" placeholder="自分で決めた合言葉" autocomplete="off">
+        <small>GitHub のトークンではありません。Cloudflare に入れた合言葉です。この端末に保存できます。</small>
       </label>
 
       <div class="post-actions">
@@ -68,11 +64,12 @@
       <p class="post-status" id="post-status" aria-live="polite"></p>
 
       <details class="post-help">
-        <summary>公開のしくみ</summary>
+        <summary>はじめて使うとき</summary>
         <ol>
-          <li>「公開する」で GitHub の <code>data/poems.json</code> に追加されます</li>
-          <li>写真も選んでいれば <code>images/</code> にアップロードされます</li>
-          <li>1〜2分後に <a href="https://hainedot.com/">hainedot.com</a> に反映されます</li>
+          <li><code>worker/SETUP.md</code> の手順で受付係（Cloudflare Worker）を作る</li>
+          <li><code>post/config.js</code> に Worker の URL を書く</li>
+          <li>合言葉を入れて「公開する」</li>
+          <li>1〜2分後に <a href="https://hainedot.com/">hainedot.com</a> に反映</li>
         </ol>
       </details>
     </form>
@@ -106,6 +103,7 @@
     </section>
   </div>
 
-  <script src="post.js?v=4"></script>
+  <script src="config.js"></script>
+  <script src="post.js?v=5"></script>
 </body>
 </html>
