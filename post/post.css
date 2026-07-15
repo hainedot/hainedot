@@ -137,8 +137,19 @@
   color: var(--text-muted);
 }
 
-.post-btn-accent {
-  background: rgba(190, 235, 200, 0.18);
+.post-btn:disabled {
+  opacity: 0.5;
+  cursor: wait;
+}
+
+.post-field code {
+  font-family: "Courier New", monospace;
+  font-size: 0.9em;
+  color: var(--finder-green-bright);
+}
+
+.post-help a {
+  color: var(--finder-green-bright);
 }
 
 .post-status {

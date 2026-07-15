@@ -17,7 +17,7 @@
 
   openingEnter.addEventListener("click", endOpening);
 
-  const poems = document.querySelectorAll(".poem-card");
+  const poemStage = document.getElementById("poem-stage");
   const dotsNav = document.getElementById("poem-dots");
   const counter = document.getElementById("hud-counter");
   const hudHint = document.getElementById("hud-hint");
@@ -27,7 +27,11 @@
   const glass = document.querySelector(".finder-glass");
   const profileCard = document.getElementById("profile-card");
   const profileBtn = document.getElementById("profile-btn");
-  const total = poems.length;
+  const archive = document.getElementById("date-archive");
+
+  let poems = [];
+  let dots = [];
+  let total = 0;
   let current = 0;
   let isProfileView = false;
   let isAnimating = false;
@@ -43,17 +47,53 @@
     shutterAudio.play().catch(() => {});
   }
 
-  poems.forEach((_, index) => {
-    const dot = document.createElement("button");
-    dot.type = "button";
-    dot.setAttribute("aria-label", (index + 1) + "番目の詩");
-    if (index === 0) dot.classList.add("is-active");
-    dot.addEventListener("click", () => goTo(index));
-    dotsNav.appendChild(dot);
-  });
+  function escapeHtml(text) {
+    return String(text)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
 
-  const dots = dotsNav.querySelectorAll("button");
-  const archive = document.getElementById("date-archive");
+  function createPoemCard(poem, index) {
+    const article = document.createElement("article");
+    article.className = "poem-card";
+    article.dataset.index = String(index);
+
+    const img = document.createElement("img");
+    img.className = "finder-photo";
+    img.src = "images/" + (poem.image || "profile.png");
+    img.alt = "";
+    article.appendChild(img);
+
+    const content = document.createElement("div");
+    content.className = "poem-content";
+
+    const title = document.createElement("h1");
+    title.className = "poem-title";
+    title.textContent = poem.title || "無題";
+    content.appendChild(title);
+
+    const time = document.createElement("time");
+    time.className = "poem-date";
+    time.setAttribute("datetime", poem.datetime || "");
+    time.textContent = poem.displayDate || poem.datetime || "";
+    content.appendChild(time);
+
+    const body = document.createElement("div");
+    body.className = "poem-body";
+    const lines = Array.isArray(poem.lines) ? poem.lines : [];
+    if (lines.length === 0) {
+      body.innerHTML = "<p></p>";
+    } else {
+      body.innerHTML = lines
+        .map((line) => "<p>" + escapeHtml(line) + "</p>")
+        .join("");
+    }
+    content.appendChild(body);
+    article.appendChild(content);
+    return article;
+  }
 
   function setArchiveActive(index) {
     document.querySelectorAll(".archive-item").forEach((btn) => {
@@ -82,6 +122,7 @@
   }
 
   function buildArchive() {
+    archive.innerHTML = "";
     const groups = {};
 
     poems.forEach((card, index) => {
@@ -125,7 +166,6 @@
           const dateLine = document.createElement("span");
           dateLine.className = "archive-date";
           dateLine.textContent = entry.month + (entry.day ? "." + entry.day : "");
-
           btn.appendChild(dateLine);
 
           if (entry.day) {
@@ -146,8 +186,6 @@
         archive.appendChild(list);
       });
   }
-
-  buildArchive();
 
   function randomIndex(exclude) {
     if (total <= 1) return 0;
@@ -221,14 +259,6 @@
     }, 400);
   }
 
-  function next() {
-    goTo(randomIndex(current));
-  }
-
-  function prev() {
-    goTo(randomIndex(current));
-  }
-
   function goToWithShutter(index) {
     if (!openingDone || isAnimating) return;
     if (total === 0) {
@@ -283,8 +313,6 @@
     }, 150);
   }
 
-  profileBtn.addEventListener("click", showProfileWithShutter);
-
   function fireShutter() {
     if (total === 0) {
       if (isProfileView) {
@@ -306,73 +334,113 @@
     goTo(randomIndex(current));
   }
 
-  shutterBtn.addEventListener("click", fireShutter);
+  function wireUi() {
+    profileBtn.addEventListener("click", showProfileWithShutter);
+    shutterBtn.addEventListener("click", fireShutter);
 
-  window.addEventListener(
-    "wheel",
-    (event) => {
-      if (!openingDone || scrollCooldown || isAnimating) return;
-      scrollCooldown = true;
-      if (event.deltaY > 0) toggleProfileOrPoem();
-      else toggleProfileOrPoem();
-      setTimeout(() => {
-        scrollCooldown = false;
-      }, 600);
-    },
-    { passive: true }
-  );
+    window.addEventListener(
+      "wheel",
+      (event) => {
+        if (!openingDone || scrollCooldown || isAnimating) return;
+        scrollCooldown = true;
+        if (event.deltaY > 0) toggleProfileOrPoem();
+        else toggleProfileOrPoem();
+        setTimeout(() => {
+          scrollCooldown = false;
+        }, 600);
+      },
+      { passive: true }
+    );
 
-  window.addEventListener("keydown", (event) => {
-    if (!openingDone) {
+    window.addEventListener("keydown", (event) => {
+      if (!openingDone) {
+        if (event.key === " " || event.key === "Enter") {
+          event.preventDefault();
+          endOpening();
+        }
+        return;
+      }
       if (event.key === " " || event.key === "Enter") {
         event.preventDefault();
-        endOpening();
+        fireShutter();
+        return;
       }
-      return;
-    }
-    if (event.key === " " || event.key === "Enter") {
-      event.preventDefault();
-      fireShutter();
-      return;
-    }
-    if (isAnimating) return;
-    if (event.key === "ArrowDown" || event.key === "ArrowRight") {
-      event.preventDefault();
-      toggleProfileOrPoem();
-    }
-    if (event.key === "ArrowUp" || event.key === "ArrowLeft") {
-      event.preventDefault();
-      toggleProfileOrPoem();
-    }
-  });
+      if (isAnimating) return;
+      if (event.key === "ArrowDown" || event.key === "ArrowRight") {
+        event.preventDefault();
+        toggleProfileOrPoem();
+      }
+      if (event.key === "ArrowUp" || event.key === "ArrowLeft") {
+        event.preventDefault();
+        toggleProfileOrPoem();
+      }
+    });
 
-  finder.addEventListener("mousemove", (event) => {
-    const rect = finder.getBoundingClientRect();
-    const x = (event.clientX - rect.left) / rect.width - 0.5;
-    const y = (event.clientY - rect.top) / rect.height - 0.5;
+    finder.addEventListener("mousemove", (event) => {
+      const rect = finder.getBoundingClientRect();
+      const x = (event.clientX - rect.left) / rect.width - 0.5;
+      const y = (event.clientY - rect.top) / rect.height - 0.5;
+      glass.style.transform =
+        "translate(" + x * 6 + "px, " + y * 4 + "px)";
+      finder.classList.add("is-aiming");
+    });
 
-    glass.style.transform =
-      "translate(" + (x * 6) + "px, " + (y * 4) + "px)";
-    finder.classList.add("is-aiming");
-  });
-
-  finder.addEventListener("mouseleave", () => {
-    glass.style.transform = "translate(0, 0)";
-    finder.classList.remove("is-aiming");
-  });
-
-  if (total > 0) {
-    if (hudHint) {
-      hudHint.textContent = "スクロールまたはシャッターで切り替え";
-    }
-    poems[0].classList.remove("is-active");
-    dots[0].classList.remove("is-active");
-    current = Math.floor(Math.random() * total);
-    poems[current].classList.add("is-active");
-    dots[current].classList.add("is-active");
-    updateCounter(current);
-    setArchiveActive(current);
-  } else {
-    updateEmptyState();
+    finder.addEventListener("mouseleave", () => {
+      glass.style.transform = "translate(0, 0)";
+      finder.classList.remove("is-aiming");
+    });
   }
+
+  async function loadPoems() {
+    let poemData = [];
+    try {
+      const response = await fetch("data/poems.json", { cache: "no-store" });
+      if (response.ok) {
+        const data = await response.json();
+        poemData = Array.isArray(data.poems) ? data.poems : [];
+      }
+    } catch (error) {
+      poemData = [];
+    }
+
+    poemData.forEach((poem, index) => {
+      const card = createPoemCard(poem, index);
+      poemStage.insertBefore(card, profileCard);
+    });
+
+    poems = Array.from(document.querySelectorAll(".poem-card"));
+    total = poems.length;
+    dotsNav.innerHTML = "";
+
+    poems.forEach((_, index) => {
+      const dot = document.createElement("button");
+      dot.type = "button";
+      dot.setAttribute("aria-label", index + 1 + "番目の詩");
+      if (index === 0) dot.classList.add("is-active");
+      dot.addEventListener("click", () => goTo(index));
+      dotsNav.appendChild(dot);
+    });
+
+    dots = Array.from(dotsNav.querySelectorAll("button"));
+    buildArchive();
+
+    if (total > 0) {
+      dotsNav.hidden = false;
+      if (hudHint) {
+        hudHint.textContent = "スクロールまたはシャッターで切り替え";
+      }
+      poems.forEach((card) => card.classList.remove("is-active"));
+      dots.forEach((dot) => dot.classList.remove("is-active"));
+      current = Math.floor(Math.random() * total);
+      poems[current].classList.add("is-active");
+      dots[current].classList.add("is-active");
+      updateCounter(current);
+      setArchiveActive(current);
+    } else {
+      updateEmptyState();
+    }
+  }
+
+  wireUi();
+  loadPoems();
 })();

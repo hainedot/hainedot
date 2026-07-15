@@ -4,15 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="robots" content="noindex, nofollow">
-  <title>下書き | hainedot</title>
-  <link rel="stylesheet" href="../style.css?v=4">
-  <link rel="stylesheet" href="post.css?v=3">
+  <title>投稿 | hainedot</title>
+  <link rel="stylesheet" href="../style.css?v=5">
+  <link rel="stylesheet" href="post.css?v=4">
 </head>
 <body class="post-page">
   <header class="post-header">
-    <p class="post-kicker">自分専用 · 公開はされない</p>
+    <p class="post-kicker">自分専用 · 投稿ページ</p>
     <h1 class="post-brand">hainedot</h1>
-    <p class="post-lead">ここで書いてプレビューし、できた HTML を本体に貼って公開します。</p>
+    <p class="post-lead">書いてプレビューし、「公開する」を押すとサイトに反映されます。</p>
   </header>
 
   <div class="post-layout">
@@ -33,7 +33,13 @@
       </label>
 
       <label class="post-field">
-        <span>写真ファイル名（images フォルダ内）</span>
+        <span>写真を選ぶ</span>
+        <input type="file" id="field-image-file" accept="image/*">
+        <small>選んだ写真も一緒にアップロードされます。</small>
+      </label>
+
+      <label class="post-field">
+        <span>写真ファイル名（既存のものを使う場合）</span>
         <input type="text" id="field-image" name="image" placeholder="poem-01.png" list="image-suggestions">
         <datalist id="image-suggestions">
           <option value="profile.png"></option>
@@ -44,31 +50,29 @@
       </label>
 
       <label class="post-field">
-        <span>プレビュー用に写真を選ぶ（任意）</span>
-        <input type="file" id="field-image-file" accept="image/*">
-      </label>
-
-      <label class="post-field">
-        <span>番号 data-index</span>
-        <input type="number" id="field-index" name="index" min="0" value="0" step="1">
-        <small>1本目は 0、2本目は 1 …。既存の詩の次から増やす。</small>
+        <span>GitHub トークン（初回だけ）</span>
+        <input type="password" id="field-token" name="token" placeholder="github_pat_... または ghp_..." autocomplete="off">
+        <small>
+          GitHub → Settings → Developer settings → Personal access tokens で
+          <code>Contents: Read and write</code> 権限のトークンを作って貼る。
+          この端末にだけ保存されます。
+        </small>
       </label>
 
       <div class="post-actions">
+        <button type="button" class="post-btn post-btn-accent" id="btn-publish">公開する</button>
         <button type="button" class="post-btn" id="btn-save">下書き保存</button>
         <button type="button" class="post-btn post-btn-ghost" id="btn-clear">クリア</button>
-        <button type="button" class="post-btn post-btn-accent" id="btn-copy">HTMLをコピー</button>
       </div>
 
       <p class="post-status" id="post-status" aria-live="polite"></p>
 
       <details class="post-help">
-        <summary>公開の手順</summary>
+        <summary>公開のしくみ</summary>
         <ol>
-          <li>写真を <code>images/</code> に入れる（ファイル名を上と合わせる）</li>
-          <li>「HTMLをコピー」を押す</li>
-          <li><code>index.html</code> の <code>profile-card</code> の<strong>直前</strong>に貼る</li>
-          <li><code>サイトを開く.bat</code> で確認 → GitHub に送って本番公開</li>
+          <li>「公開する」で GitHub の <code>data/poems.json</code> に追加されます</li>
+          <li>写真も選んでいれば <code>images/</code> にアップロードされます</li>
+          <li>1〜2分後に <a href="https://hainedot.com/">hainedot.com</a> に反映されます</li>
         </ol>
       </details>
     </form>
@@ -102,14 +106,6 @@
     </section>
   </div>
 
-  <section class="post-output">
-    <div class="post-output-head">
-      <p>貼り付け用 HTML</p>
-      <button type="button" class="post-btn post-btn-ghost" id="btn-copy-code">再コピー</button>
-    </div>
-    <pre class="post-code" id="output-code" tabindex="0"></pre>
-  </section>
-
-  <script src="post.js?v=2"></script>
+  <script src="post.js?v=4"></script>
 </body>
 </html>
