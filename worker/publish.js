@@ -1,14 +1,12 @@
 /**
  * hainedot 投稿受付係（Cloudflare Worker）
  *
- * 必要なシークレット（Cloudflare ダッシュボードで設定）:
- * - GITHUB_TOKEN … GitHub の Contents: Read and write トークン
- * - PUBLISH_PASSWORD … 投稿ページで使う合言葉
+ * 必要なシークレット:
+ * - GITHUB_TOKEN
+ * - PUBLISH_PASSWORD
  *
- * 任意の変数:
- * - GITHUB_OWNER （省略時 hainedot）
- * - GITHUB_REPO （省略時 hainedot）
- * - GITHUB_BRANCH （省略時 main）
+ * POST / または /publish … 公開
+ * POST /delete … 削除（index）
  */
 
 const ALLOWED_ORIGINS = [
@@ -18,6 +16,13 @@ const ALLOWED_ORIGINS = [
   "http://localhost:8000",
   "http://127.0.0.1:8000",
 ];
+
+const PROTECTED_IMAGES = new Set([
+  "profile.png",
+  "slide-01.png",
+  "slide-02.png",
+  "slide-03.png",
+]);
 
 export default {
   async fetch(request, env) {
@@ -33,9 +38,7 @@ export default {
     }
 
     const url = new URL(request.url);
-    if (url.pathname !== "/" && url.pathname !== "/publish") {
-      return json({ error: "Not found" }, 404, cors);
-    }
+    const path = url.pathname.replace(/\/$/, "") || "/";
 
     try {
       const form = await request.formData();
@@ -54,88 +57,168 @@ export default {
       const owner = env.GITHUB_OWNER || "hainedot";
       const repo = env.GITHUB_REPO || "hainedot";
       const branch = env.GITHUB_BRANCH || "main";
+      const action = String(form.get("action") || "").toLowerCase();
 
-      const title = String(form.get("title") || "無題").trim() || "無題";
-      const datetime = String(form.get("datetime") || "").trim();
-      const displayDate = String(form.get("displayDate") || datetime).trim();
-      let lines = [];
-      try {
-        lines = JSON.parse(String(form.get("lines") || "[]"));
-      } catch {
-        lines = [];
-      }
-      if (!Array.isArray(lines) || lines.length === 0) {
-        return json({ error: "詩の本文が空です" }, 400, cors);
+      if (path === "/delete" || action === "delete") {
+        return handleDelete(form, token, owner, repo, branch, cors);
       }
 
-      let imageName = sanitizeFileName(String(form.get("imageName") || "poem.png"));
-      const imageFile = form.get("image");
-
-      if (imageFile && typeof imageFile === "object" && imageFile.arrayBuffer) {
-        const preferred = sanitizeFileName(imageFile.name || imageName);
-        imageName = await ensureUniqueImageName(token, owner, repo, branch, preferred);
-        const buffer = await imageFile.arrayBuffer();
-        await putFile(
-          token,
-          owner,
-          repo,
-          branch,
-          "images/" + imageName,
-          arrayBufferToBase64(buffer),
-          "Add poem image: " + imageName
-        );
-      } else if (!form.get("imageName")) {
-        return json({ error: "写真を選ぶか、既存のファイル名を指定してください" }, 400, cors);
+      if (path === "/" || path === "/publish" || action === "publish" || !action) {
+        return handlePublish(form, token, owner, repo, branch, cors);
       }
 
-      const poemsPath = "data/poems.json";
-      const existing = await getFile(token, owner, repo, branch, poemsPath);
-      let poemsData = { poems: [] };
-      let sha = null;
-      if (existing) {
-        sha = existing.sha;
-        poemsData = JSON.parse(base64ToUtf8(existing.content));
-        if (!Array.isArray(poemsData.poems)) poemsData.poems = [];
-      }
-
-      poemsData.poems.push({
-        title,
-        datetime,
-        displayDate,
-        image: imageName,
-        lines: lines.map((line) => String(line)),
-      });
-
-      const jsonText = JSON.stringify(poemsData, null, 2) + "\n";
-      await putFile(
-        token,
-        owner,
-        repo,
-        branch,
-        poemsPath,
-        utf8ToBase64(jsonText),
-        "Publish poem: " + title,
-        sha
-      );
-
-      return json(
-        {
-          ok: true,
-          image: imageName,
-          count: poemsData.poems.length,
-        },
-        200,
-        cors
-      );
+      return json({ error: "Not found" }, 404, cors);
     } catch (error) {
       return json(
-        { error: error && error.message ? error.message : "公開に失敗しました" },
+        { error: error && error.message ? error.message : "処理に失敗しました" },
         500,
         cors
       );
     }
   },
 };
+
+async function handlePublish(form, token, owner, repo, branch, cors) {
+  const title = String(form.get("title") || "無題").trim() || "無題";
+  const datetime = String(form.get("datetime") || "").trim();
+  const displayDate = String(form.get("displayDate") || datetime).trim();
+  let lines = [];
+  try {
+    lines = JSON.parse(String(form.get("lines") || "[]"));
+  } catch {
+    lines = [];
+  }
+  if (!Array.isArray(lines) || lines.length === 0) {
+    return json({ error: "詩の本文が空です" }, 400, cors);
+  }
+
+  let imageName = sanitizeFileName(String(form.get("imageName") || "poem.png"));
+  const imageFile = form.get("image");
+
+  if (imageFile && typeof imageFile === "object" && imageFile.arrayBuffer) {
+    const preferred = sanitizeFileName(imageFile.name || imageName);
+    imageName = await ensureUniqueImageName(token, owner, repo, branch, preferred);
+    const buffer = await imageFile.arrayBuffer();
+    await putFile(
+      token,
+      owner,
+      repo,
+      branch,
+      "images/" + imageName,
+      arrayBufferToBase64(buffer),
+      "Add poem image: " + imageName
+    );
+  } else if (!form.get("imageName")) {
+    return json({ error: "写真を選ぶか、既存のファイル名を指定してください" }, 400, cors);
+  }
+
+  const poemsPath = "data/poems.json";
+  const existing = await getFile(token, owner, repo, branch, poemsPath);
+  let poemsData = { poems: [] };
+  let sha = null;
+  if (existing) {
+    sha = existing.sha;
+    poemsData = JSON.parse(base64ToUtf8(existing.content));
+    if (!Array.isArray(poemsData.poems)) poemsData.poems = [];
+  }
+
+  poemsData.poems.push({
+    title,
+    datetime,
+    displayDate,
+    image: imageName,
+    lines: lines.map((line) => String(line)),
+  });
+
+  const jsonText = JSON.stringify(poemsData, null, 2) + "\n";
+  await putFile(
+    token,
+    owner,
+    repo,
+    branch,
+    poemsPath,
+    utf8ToBase64(jsonText),
+    "Publish poem: " + title,
+    sha
+  );
+
+  return json(
+    {
+      ok: true,
+      image: imageName,
+      count: poemsData.poems.length,
+    },
+    200,
+    cors
+  );
+}
+
+async function handleDelete(form, token, owner, repo, branch, cors) {
+  const index = Number(form.get("index"));
+  if (!Number.isInteger(index) || index < 0) {
+    return json({ error: "削除する詩の番号が不正です" }, 400, cors);
+  }
+
+  const poemsPath = "data/poems.json";
+  const existing = await getFile(token, owner, repo, branch, poemsPath);
+  if (!existing) {
+    return json({ error: "詩データがありません" }, 404, cors);
+  }
+
+  const poemsData = JSON.parse(base64ToUtf8(existing.content));
+  if (!Array.isArray(poemsData.poems) || index >= poemsData.poems.length) {
+    return json({ error: "その詩は見つかりません" }, 404, cors);
+  }
+
+  const removed = poemsData.poems[index];
+  poemsData.poems.splice(index, 1);
+
+  const jsonText = JSON.stringify(poemsData, null, 2) + "\n";
+  await putFile(
+    token,
+    owner,
+    repo,
+    branch,
+    poemsPath,
+    utf8ToBase64(jsonText),
+    "Delete poem: " + (removed.title || index),
+    existing.sha
+  );
+
+  let imageDeleted = false;
+  const imageName = sanitizeFileName(removed.image || "");
+  if (imageName && !PROTECTED_IMAGES.has(imageName)) {
+    const stillUsed = poemsData.poems.some(
+      (poem) => sanitizeFileName(poem.image || "") === imageName
+    );
+    if (!stillUsed) {
+      const imageFile = await getFile(token, owner, repo, branch, "images/" + imageName);
+      if (imageFile && imageFile.sha) {
+        await deleteFile(
+          token,
+          owner,
+          repo,
+          branch,
+          "images/" + imageName,
+          imageFile.sha,
+          "Delete poem image: " + imageName
+        );
+        imageDeleted = true;
+      }
+    }
+  }
+
+  return json(
+    {
+      ok: true,
+      removed: removed.title || "",
+      count: poemsData.poems.length,
+      imageDeleted,
+    },
+    200,
+    cors
+  );
+}
 
 function corsHeaders(origin) {
   const allow = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
@@ -243,6 +326,18 @@ async function putFile(token, owner, repo, branch, filePath, contentBase64, mess
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
+  });
+}
+
+async function deleteFile(token, owner, repo, branch, filePath, sha, message) {
+  return github(token, `/repos/${owner}/${repo}/contents/${filePath}`, {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      message,
+      sha,
+      branch,
+    }),
   });
 }
 

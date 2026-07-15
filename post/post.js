@@ -12,6 +12,8 @@
   const passwordEl = document.getElementById("field-password");
   const statusEl = document.getElementById("post-status");
   const publishBtn = document.getElementById("btn-publish");
+  const publishedList = document.getElementById("published-list");
+  const refreshBtn = document.getElementById("btn-refresh-list");
 
   const previewTitle = document.getElementById("preview-title");
   const previewDate = document.getElementById("preview-date");
@@ -20,6 +22,8 @@
 
   let localPreviewUrl = "";
   let isPublishing = false;
+  let isDeleting = false;
+  let publishedPoems = [];
 
   const KANJI_DIGITS = ["〇", "一", "二", "三", "四", "五", "六", "七", "八", "九"];
   const MONTH_KANJI = [
@@ -315,12 +319,129 @@
       }
 
       setStatus("公開しました。1〜2分後に https://hainedot.com/ に反映されます");
+      loadPublishedList();
     } catch (error) {
       setStatus(error.message || "公開に失敗しました");
     } finally {
       isPublishing = false;
       publishBtn.disabled = false;
       updatePreview();
+    }
+  }
+
+  function renderPublishedList() {
+    if (!publishedList) return;
+
+    if (!publishedPoems.length) {
+      publishedList.innerHTML =
+        '<li class="post-published-empty">まだ公開されている詩はありません</li>';
+      return;
+    }
+
+    publishedList.innerHTML = publishedPoems
+      .map((poem, index) => {
+        const title = escapeHtml(poem.title || "無題");
+        const date = escapeHtml(poem.displayDate || poem.datetime || "");
+        return (
+          '<li class="post-published-item">' +
+          '<div class="post-published-meta">' +
+          '<p class="post-published-title">' +
+          title +
+          "</p>" +
+          '<p class="post-published-date">' +
+          date +
+          "</p>" +
+          "</div>" +
+          '<button type="button" class="post-btn post-btn-danger" data-delete-index="' +
+          index +
+          '">削除</button>' +
+          "</li>"
+        );
+      })
+      .join("");
+  }
+
+  async function loadPublishedList() {
+    if (!publishedList) return;
+    publishedList.innerHTML =
+      '<li class="post-published-empty">読み込み中…</li>';
+    try {
+      const response = await fetch("../data/poems.json?t=" + Date.now(), {
+        cache: "no-store",
+      });
+      if (!response.ok) throw new Error("一覧を読めませんでした");
+      const data = await response.json();
+      publishedPoems = Array.isArray(data.poems) ? data.poems : [];
+      renderPublishedList();
+    } catch (error) {
+      publishedList.innerHTML =
+        '<li class="post-published-empty">一覧の読み込みに失敗しました</li>';
+    }
+  }
+
+  async function deletePoem(index) {
+    if (isDeleting || isPublishing) return;
+
+    const poem = publishedPoems[index];
+    if (!poem) return;
+
+    const password = passwordEl.value;
+    if (!password) {
+      setStatus("削除には合言葉が必要です");
+      passwordEl.focus();
+      return;
+    }
+
+    const ok = window.confirm(
+      "「" + (poem.title || "無題") + "」を削除しますか？"
+    );
+    if (!ok) return;
+
+    const publishUrl = getPublishUrl();
+    if (!publishUrl) {
+      setStatus("受付係の URL が未設定です");
+      return;
+    }
+
+    isDeleting = true;
+    setStatus("削除しています…");
+
+    try {
+      try {
+        localStorage.setItem(PASSWORD_KEY, password);
+      } catch (error) {
+        // ignore
+      }
+
+      const form = new FormData();
+      form.append("password", password);
+      form.append("action", "delete");
+      form.append("index", String(index));
+
+      const response = await fetch(publishUrl + "/delete", {
+        method: "POST",
+        body: form,
+      });
+
+      let data = {};
+      try {
+        data = await response.json();
+      } catch (error) {
+        data = {};
+      }
+
+      if (!response.ok || !data.ok) {
+        throw new Error(data.error || "削除に失敗しました (" + response.status + ")");
+      }
+
+      setStatus(
+        "削除しました。1〜2分後に https://hainedot.com/ に反映されます"
+      );
+      await loadPublishedList();
+    } catch (error) {
+      setStatus(error.message || "削除に失敗しました");
+    } finally {
+      isDeleting = false;
     }
   }
 
@@ -333,6 +454,15 @@
   document.getElementById("btn-save").addEventListener("click", saveDraft);
   document.getElementById("btn-clear").addEventListener("click", clearForm);
   publishBtn.addEventListener("click", publish);
+  if (refreshBtn) refreshBtn.addEventListener("click", loadPublishedList);
+  if (publishedList) {
+    publishedList.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-delete-index]");
+      if (!button) return;
+      const index = Number(button.getAttribute("data-delete-index"));
+      deletePoem(index);
+    });
+  }
 
   if (!dateEl.value) {
     dateEl.value = todayValue();
@@ -340,6 +470,7 @@
 
   loadDraft();
   updatePreview();
+  loadPublishedList();
 
   if (!getPublishUrl()) {
     setStatus("まだ受付係が未設定です。worker/SETUP.md を開いてセットアップしてください");

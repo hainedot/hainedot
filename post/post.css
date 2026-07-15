@@ -142,6 +142,69 @@
   cursor: wait;
 }
 
+.post-btn-danger {
+  border-color: rgba(220, 140, 140, 0.45);
+  background: rgba(220, 140, 140, 0.08);
+  color: rgba(232, 180, 180, 0.95);
+  min-height: 36px;
+  flex: 0 0 auto;
+}
+
+.post-btn-danger:hover {
+  background: rgba(220, 140, 140, 0.18);
+}
+
+.post-published {
+  margin-top: 0.75rem;
+  border-top: 1px solid rgba(160, 210, 170, 0.12);
+  padding-top: 1.25rem;
+}
+
+.post-published-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.85rem;
+}
+
+.post-published-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.post-published-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid rgba(160, 210, 170, 0.16);
+  background: rgba(8, 10, 9, 0.45);
+}
+
+.post-published-title {
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  color: rgba(232, 228, 220, 0.88);
+}
+
+.post-published-date {
+  margin-top: 0.25rem;
+  font-size: 0.5rem;
+  letter-spacing: 0.1em;
+  color: rgba(232, 228, 220, 0.42);
+}
+
+.post-published-empty {
+  font-size: 0.55rem;
+  letter-spacing: 0.1em;
+  color: rgba(232, 228, 220, 0.4);
+  padding: 0.4rem 0;
+}
+
 .post-field code {
   font-family: "Courier New", monospace;
   font-size: 0.9em;

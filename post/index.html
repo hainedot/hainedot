@@ -6,7 +6,7 @@
   <meta name="robots" content="noindex, nofollow">
   <title>投稿 | hainedot</title>
   <link rel="stylesheet" href="../style.css?v=5">
-  <link rel="stylesheet" href="post.css?v=5">
+  <link rel="stylesheet" href="post.css?v=6">
 </head>
 <body class="post-page">
   <header class="post-header">
@@ -66,12 +66,21 @@
       <details class="post-help">
         <summary>はじめて使うとき</summary>
         <ol>
-          <li><code>worker/SETUP.md</code> の手順で受付係（Cloudflare Worker）を作る</li>
-          <li><code>post/config.js</code> に Worker の URL を書く</li>
           <li>合言葉を入れて「公開する」</li>
           <li>1〜2分後に <a href="https://hainedot.com/">hainedot.com</a> に反映</li>
+          <li>下の一覧から削除もできます</li>
         </ol>
       </details>
+
+      <section class="post-published" aria-label="公開済みの詩">
+        <div class="post-published-head">
+          <p class="post-preview-label">公開済み</p>
+          <button type="button" class="post-btn post-btn-ghost" id="btn-refresh-list">再読み込み</button>
+        </div>
+        <ul class="post-published-list" id="published-list">
+          <li class="post-published-empty">読み込み中…</li>
+        </ul>
+      </section>
     </form>
 
     <section class="post-preview-wrap" aria-label="プレビュー">
@@ -104,6 +113,6 @@
   </div>
 
   <script src="config.js"></script>
-  <script src="post.js?v=5"></script>
+  <script src="post.js?v=6"></script>
 </body>
 </html>
