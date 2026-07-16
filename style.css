@@ -256,14 +256,6 @@ body.is-ready .camera-body {
   display: block;
 }
 
-.archive-day {
-  display: block;
-  font-size: 0.58rem;
-  letter-spacing: 0.1em;
-  color: rgba(232, 228, 220, 0.35);
-  margin-top: 0.15rem;
-}
-
 /* ========================================
    Viewfinder frame
    ======================================== */

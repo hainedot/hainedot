@@ -168,13 +168,6 @@
           dateLine.textContent = entry.month + (entry.day ? "." + entry.day : "");
           btn.appendChild(dateLine);
 
-          if (entry.day) {
-            const dayLine = document.createElement("span");
-            dayLine.className = "archive-day";
-            dayLine.textContent = entry.day;
-            btn.appendChild(dayLine);
-          }
-
           btn.addEventListener("click", () => {
             goToWithShutter(entry.index);
           });
