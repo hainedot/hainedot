@@ -99,6 +99,15 @@ body {
   color: var(--finder-green-bright);
 }
 
+.sound-toggle-opening {
+  position: absolute;
+  right: max(1.25rem, env(safe-area-inset-right, 0px));
+  bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));
+  z-index: 101;
+  opacity: 0;
+  animation: openingFadeIn 2.2s ease 0.9s forwards;
+}
+
 @keyframes openingFadeIn {
   0% {
     opacity: 0;
@@ -856,6 +865,10 @@ body.is-ready .camera-body {
     bottom: calc(2.7rem + env(safe-area-inset-bottom, 0px));
     font-size: 0.48rem;
     min-height: 36px;
+  }
+
+  .sound-toggle-opening {
+    bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px));
   }
 
   .poem-dots {

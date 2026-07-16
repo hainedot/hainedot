@@ -47,17 +47,18 @@
     // ignore
   }
 
-  const soundToggle = document.getElementById("sound-toggle");
+  const soundToggles = document.querySelectorAll(".sound-toggle");
 
   function updateSoundToggle() {
-    if (!soundToggle) return;
-    soundToggle.textContent = soundOn ? "SOUND ON" : "SOUND OFF";
-    soundToggle.classList.toggle("is-off", !soundOn);
-    soundToggle.setAttribute("aria-pressed", soundOn ? "true" : "false");
-    soundToggle.setAttribute(
-      "aria-label",
-      soundOn ? "音をオフにする" : "音をオンにする"
-    );
+    soundToggles.forEach((btn) => {
+      btn.textContent = soundOn ? "SOUND ON" : "SOUND OFF";
+      btn.classList.toggle("is-off", !soundOn);
+      btn.setAttribute("aria-pressed", soundOn ? "true" : "false");
+      btn.setAttribute(
+        "aria-label",
+        soundOn ? "音をオフにする" : "音をオンにする"
+      );
+    });
   }
 
   function playShutterSound() {
@@ -70,16 +71,21 @@
     shutterAudio.play().catch(() => {});
   }
 
-  if (soundToggle) {
+  function toggleSound(event) {
+    if (event) event.stopPropagation();
+    soundOn = !soundOn;
+    try {
+      localStorage.setItem(SOUND_KEY, soundOn ? "1" : "0");
+    } catch (error) {
+      // ignore
+    }
     updateSoundToggle();
-    soundToggle.addEventListener("click", () => {
-      soundOn = !soundOn;
-      try {
-        localStorage.setItem(SOUND_KEY, soundOn ? "1" : "0");
-      } catch (error) {
-        // ignore
-      }
-      updateSoundToggle();
+  }
+
+  if (soundToggles.length) {
+    updateSoundToggle();
+    soundToggles.forEach((btn) => {
+      btn.addEventListener("click", toggleSound);
     });
   }
 
