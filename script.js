@@ -37,14 +37,50 @@
   let isAnimating = false;
   let scrollCooldown = false;
   let shutterAudio = null;
+  const SOUND_KEY = "hainedot-sound-on";
+  let soundOn = true;
+
+  try {
+    const saved = localStorage.getItem(SOUND_KEY);
+    if (saved === "0") soundOn = false;
+  } catch (error) {
+    // ignore
+  }
+
+  const soundToggle = document.getElementById("sound-toggle");
+
+  function updateSoundToggle() {
+    if (!soundToggle) return;
+    soundToggle.textContent = soundOn ? "SOUND ON" : "SOUND OFF";
+    soundToggle.classList.toggle("is-off", !soundOn);
+    soundToggle.setAttribute("aria-pressed", soundOn ? "true" : "false");
+    soundToggle.setAttribute(
+      "aria-label",
+      soundOn ? "音をオフにする" : "音をオンにする"
+    );
+  }
 
   function playShutterSound() {
+    if (!soundOn) return;
     if (!shutterAudio) {
       shutterAudio = new Audio("sounds/shutter.wav");
       shutterAudio.preload = "auto";
     }
     shutterAudio.currentTime = 0;
     shutterAudio.play().catch(() => {});
+  }
+
+  if (soundToggle) {
+    updateSoundToggle();
+    soundToggle.addEventListener("click", () => {
+      soundOn = !soundOn;
+      try {
+        localStorage.setItem(SOUND_KEY, soundOn ? "1" : "0");
+      } catch (error) {
+        // ignore
+      }
+      updateSoundToggle();
+    });
   }
 
   function escapeHtml(text) {

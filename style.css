@@ -698,6 +698,34 @@ body.is-ready .camera-body {
   100% { transform: translate(-50%, -50%) scale(1); }
 }
 
+.sound-toggle {
+  position: absolute;
+  right: max(1.25rem, env(safe-area-inset-right, 0px));
+  bottom: calc(2.35rem + env(safe-area-inset-bottom, 0px));
+  z-index: 6;
+  border: 1px solid rgba(160, 210, 170, 0.28);
+  background: rgba(8, 10, 9, 0.35);
+  color: var(--finder-green);
+  font-family: "Courier New", monospace;
+  font-size: 0.52rem;
+  letter-spacing: 0.16em;
+  padding: 0.55rem 0.7rem;
+  cursor: pointer;
+  opacity: 0.72;
+  transition: opacity 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+}
+
+.sound-toggle:hover {
+  opacity: 1;
+  color: var(--finder-green-bright);
+  border-color: rgba(190, 235, 200, 0.45);
+}
+
+.sound-toggle.is-off {
+  color: rgba(232, 228, 220, 0.45);
+  border-color: rgba(232, 228, 220, 0.18);
+}
+
 .poem-dots {
   position: absolute;
   bottom: 5.5rem;
@@ -821,6 +849,13 @@ body.is-ready .camera-body {
   .shutter-core {
     width: 40px;
     height: 40px;
+  }
+
+  .sound-toggle {
+    right: max(0.85rem, env(safe-area-inset-right, 0px));
+    bottom: calc(2.7rem + env(safe-area-inset-bottom, 0px));
+    font-size: 0.48rem;
+    min-height: 36px;
   }
 
   .poem-dots {
