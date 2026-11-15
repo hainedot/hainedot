@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="hainedot へのコンタクト">
+  <link rel="canonical" href="https://hainedot.com/contact.html">
+  <title>コンタクト | hainedot</title>
+  <style>
+    :root { color-scheme: light; }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; background: #fff; color: #1c1c1c; }
+    body {
+      font-family: "Yu Mincho", "YuMincho", "Hiragino Mincho ProN", "Noto Serif JP", serif;
+      line-height: 1.9;
+    }
+    a { color: inherit; text-decoration: none; }
+    a:hover { opacity: 0.6; }
+    header {
+      width: min(880px, calc(100% - 80px));
+      margin: 0 auto;
+      padding: 40px 0 0;
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 32px;
+    }
+    .brand { letter-spacing: 0.14em; font-size: 1rem; }
+    .site-nav ul {
+      display: flex;
+      gap: 1.75rem;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      font-size: 0.92rem;
+      letter-spacing: 0.12em;
+    }
+    main {
+      width: min(560px, calc(100% - 80px));
+      margin: 96px auto 120px;
+    }
+    h1 {
+      margin: 0 0 28px;
+      font-size: 0.92rem;
+      font-weight: normal;
+      letter-spacing: 0.18em;
+    }
+    p { margin: 0; }
+    .contact { margin: 28px 0 0; padding-left: 1.15rem; }
+    .contact a { text-decoration: underline; text-underline-offset: 0.2em; }
+    @media (max-width: 640px) {
+      header {
+        width: min(880px, calc(100% - 48px));
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+        padding-top: 32px;
+      }
+      .site-nav ul { gap: 1.15rem; }
+      main {
+        width: min(560px, calc(100% - 48px));
+        margin-top: 72px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a class="brand" href="index.html">hainedot</a>
+    <nav class="site-nav" aria-label="サイト">
+      <ul>
+        <li><a href="new-blog.html">エッセイ</a></li>
+        <li><a href="profile.html">プロフィール</a></li>
+        <li><a href="contact.html" aria-current="page">コンタクト</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <h1>コンタクト</h1>
+    <p>お問い合わせ・ご感想は、下記よりお気軽にどうぞ。</p>
+    <ul class="contact">
+      <li>サイト：<a href="https://hainedot.com">hainedot.com</a></li>
+      <li>メール：<a href="mailto:hainedottt@gmail.com">hainedottt@gmail.com</a></li>
+      <li>X：<a href="https://x.com/hainedot" target="_blank" rel="noopener noreferrer">@hainedot</a></li>
+    </ul>
+  </main>
+</body>
+</html>

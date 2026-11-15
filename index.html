@@ -9,7 +9,6 @@
   <style>
     :root { color-scheme: light; }
     * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
     html, body { margin: 0; background: #fff; color: #1c1c1c; }
     body {
       font-family: "Yu Mincho", "YuMincho", "Hiragino Mincho ProN", "Noto Serif JP", serif;
@@ -26,10 +25,7 @@
       justify-content: space-between;
       gap: 32px;
     }
-    .brand {
-      letter-spacing: 0.14em;
-      font-size: 1rem;
-    }
+    .brand { letter-spacing: 0.14em; font-size: 1rem; }
     .site-nav ul {
       display: flex;
       gap: 1.75rem;
@@ -46,29 +42,11 @@
       margin: 88px auto 0;
     }
     .line {
-      margin: 56px 24px 0;
+      margin: 56px 24px 120px;
       font-size: 1.05rem;
       letter-spacing: 0.12em;
       text-align: center;
     }
-    .page {
-      width: min(560px, calc(100% - 80px));
-      margin: 0 auto;
-      padding-bottom: 120px;
-    }
-    section { margin-top: 112px; scroll-margin-top: 32px; }
-    h1 {
-      margin: 0 0 20px;
-      font-size: 0.92rem;
-      font-weight: normal;
-      letter-spacing: 0.18em;
-    }
-    p { margin: 0; }
-    dl { margin: 28px 0 0; }
-    dt { font-size: 0.8rem; letter-spacing: 0.1em; }
-    dd { margin: 0 0 18px; }
-    .contact { margin: 20px 0 0; padding-left: 1.15rem; }
-    .contact a { text-decoration: underline; text-underline-offset: 0.2em; }
     @media (max-width: 640px) {
       header {
         width: min(880px, calc(100% - 48px));
@@ -83,8 +61,6 @@
         margin-top: 64px;
       }
       .line { margin-top: 40px; }
-      .page { width: min(560px, calc(100% - 48px)); }
-      section { margin-top: 88px; }
     }
   </style>
 </head>
@@ -94,38 +70,13 @@
     <nav class="site-nav" aria-label="サイト">
       <ul>
         <li><a href="new-blog.html">エッセイ</a></li>
-        <li><a href="#profile">プロフィール</a></li>
-        <li><a href="#contact">コンタクト</a></li>
+        <li><a href="profile.html">プロフィール</a></li>
+        <li><a href="contact.html">コンタクト</a></li>
       </ul>
     </nav>
   </header>
 
   <img class="hero" src="images/profile.jpg" alt="コーヒーを飲む横顔">
   <p class="line">このコーヒーが飲み終わるまで</p>
-
-  <main class="page">
-    <section id="profile">
-      <h1>プロフィール</h1>
-      <p>写真と詩を重ねながら、日常の光を記録しています。</p>
-      <dl>
-        <dt>名前</dt>
-        <dd>hainedot</dd>
-        <dt>活動</dt>
-        <dd>写真撮影 / 短詩の執筆</dd>
-        <dt>拠点</dt>
-        <dd>日本 静岡</dd>
-      </dl>
-    </section>
-
-    <section id="contact">
-      <h1>コンタクト</h1>
-      <p>お問い合わせ・ご感想は、下記よりお気軽にどうぞ。</p>
-      <ul class="contact">
-        <li>サイト：<a href="https://hainedot.com">hainedot.com</a></li>
-        <li>メール：<a href="mailto:hainedottt@gmail.com">hainedottt@gmail.com</a></li>
-        <li>X：<a href="https://x.com/hainedot" target="_blank" rel="noopener noreferrer">@hainedot</a></li>
-      </ul>
-    </section>
-  </main>
 </body>
 </html>
