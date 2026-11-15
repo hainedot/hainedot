@@ -306,5 +306,48 @@
       <span>WORDS, THOUGHTS & SILENCE.</span>
     </div>
   </footer>
+  <script>
+    function fillPoems(poems) {
+      const section = document.getElementById("articles");
+      const heading = section.querySelector(".section-title");
+      section.replaceChildren(heading);
+      poems.forEach((poem, index) => {
+        const article = document.createElement("div");
+        article.className = "article";
+
+        const parts = String(poem.displayDate || "").split("　");
+        const time = document.createElement("time");
+        time.textContent = parts[0] || "";
+
+        const body = document.createElement("div");
+        const title = document.createElement("h3");
+        const link = document.createElement("a");
+        link.href = "essay.html?n=" + index;
+        link.textContent = poem.title || "";
+        title.appendChild(link);
+
+        const excerpt = document.createElement("p");
+        const text = (poem.lines || []).filter((line) => String(line).trim()).join(" ");
+        excerpt.textContent = text.length > 80 ? text.slice(0, 80) + "…" : text;
+        body.append(title, excerpt);
+
+        const category = document.createElement("div");
+        category.className = "category";
+        category.textContent = parts[1] || "エッセイ";
+
+        article.append(time, body, category);
+        section.appendChild(article);
+      });
+    }
+
+    fetch("data/poems.json", { cache: "no-cache" })
+      .then((response) => (response.ok ? response.json() : null))
+      .then((data) => {
+        if (data && Array.isArray(data.poems) && data.poems.length) {
+          fillPoems(data.poems);
+        }
+      })
+      .catch(() => {});
+  </script>
 </body>
 </html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>投稿 | hainedot</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; background: #fff; color: #1c1c1c; }
+    body {
+      font-family: "Yu Mincho", "YuMincho", "Hiragino Mincho ProN", "Noto Serif JP", serif;
+      line-height: 1.8;
+    }
+    a { color: inherit; }
+    header, main {
+      width: min(640px, calc(100% - 48px));
+      margin: 0 auto;
+    }
+    header { padding: 36px 0 0; display: flex; justify-content: space-between; align-items: baseline; }
+    .brand { letter-spacing: 0.14em; text-decoration: none; }
+    h1 { margin: 48px 0 8px; font-size: 1.05rem; font-weight: normal; letter-spacing: 0.14em; }
+    .lead { margin: 0 0 28px; }
+    label { display: block; margin: 0 0 22px; }
+    label span { display: block; margin-bottom: 8px; letter-spacing: 0.08em; font-size: 0.9rem; }
+    input, textarea, select {
+      width: 100%;
+      font: inherit;
+      color: inherit;
+      background: #fff;
+      border: 1px solid #ddd;
+      padding: 10px 12px;
+    }
+    textarea { min-height: 220px; resize: vertical; }
+    button {
+      font: inherit;
+      letter-spacing: 0.12em;
+      background: #1c1c1c;
+      color: #fff;
+      border: 0;
+      padding: 12px 22px;
+      cursor: pointer;
+    }
+    button:disabled { opacity: 0.5; }
+    .status { min-height: 1.8em; margin: 18px 0 48px; }
+    small { display: block; margin-top: 6px; color: #666; }
+  </style>
+</head>
+<body>
+  <header>
+    <a class="brand" href="../index.html">hainedot</a>
+    <a href="../new-blog.html">エッセイ</a>
+  </header>
+  <main>
+    <h1>投稿</h1>
+    <p class="lead">題名と本文を書いて、公開するを押します。1〜2分でエッセイのページに出ます。</p>
+    <form id="post-form">
+      <label>
+        <span>題名</span>
+        <input id="title" name="title" type="text" required maxlength="80">
+      </label>
+      <label>
+        <span>種類</span>
+        <select id="category" name="category">
+          <option>エッセイ</option>
+          <option>コラム</option>
+        </select>
+      </label>
+      <label>
+        <span>本文</span>
+        <textarea id="body" name="body" required placeholder="段落のあいだは、空の行をひとつ入れてください。"></textarea>
+      </label>
+      <label>
+        <span>写真（なくてもよい）</span>
+        <input id="image" name="image" type="file" accept="image/*">
+      </label>
+      <label>
+        <span>合言葉</span>
+        <input id="password" name="password" type="password" autocomplete="current-password" required>
+        <small>この端末に覚えておきます。GitHub の鍵ではありません。</small>
+      </label>
+      <button id="publish" type="submit">公開する</button>
+      <p class="status" id="status" aria-live="polite"></p>
+    </form>
+  </main>
+  <script src="config.js"></script>
+  <script src="post.js"></script>
+</body>
+</html>

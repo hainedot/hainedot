@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>エッセイ | hainedot</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; background: #fff; color: #1c1c1c; }
+    body { font-family: "Yu Mincho", "YuMincho", "Hiragino Mincho ProN", "Noto Serif JP", serif; line-height: 2; }
+    a { color: inherit; text-decoration: none; }
+    a:hover { opacity: 0.6; }
+    header { width: min(880px, calc(100% - 80px)); margin: 0 auto; padding: 40px 0 0; display: flex; align-items: baseline; justify-content: space-between; gap: 32px; }
+    .brand { letter-spacing: 0.14em; }
+    nav ul { display: flex; gap: 1.75rem; list-style: none; margin: 0; padding: 0; letter-spacing: 0.12em; font-size: 0.92rem; }
+    main { width: min(640px, calc(100% - 80px)); margin: 72px auto 120px; }
+    .meta { margin: 0; letter-spacing: 0.12em; font-size: 0.85rem; }
+    h1 { margin: 18px 0 28px; font-size: 1.35rem; font-weight: normal; letter-spacing: 0.06em; line-height: 1.6; }
+    .essay-photo { display: block; width: 100%; height: auto; margin: 0 0 32px; }
+    p { margin: 0 0 1.4em; }
+    @media (max-width: 640px) {
+      header, main { width: min(880px, calc(100% - 48px)); }
+      header { flex-direction: column; align-items: flex-start; gap: 20px; }
+      nav ul { gap: 1.15rem; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a class="brand" href="index.html">hainedot</a>
+    <nav aria-label="サイト">
+      <ul>
+        <li><a href="new-blog.html">エッセイ</a></li>
+        <li><a href="profile.html">プロフィール</a></li>
+        <li><a href="contact.html">コンタクト</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main id="essay">
+    <p>読み込んでいます。</p>
+  </main>
+  <script>
+    const index = Number(new URLSearchParams(location.search).get("n"));
+    const main = document.getElementById("essay");
+
+    function paragraphs(lines) {
+      const blocks = [];
+      let current = [];
+      lines.forEach((line) => {
+        if (String(line).trim() === "") {
+          if (current.length) blocks.push(current);
+          current = [];
+        } else {
+          current.push(String(line));
+        }
+      });
+      if (current.length) blocks.push(current);
+      return blocks;
+    }
+
+    fetch("data/poems.json", { cache: "no-cache" })
+      .then((response) => response.json())
+      .then((data) => {
+        const poem = data.poems && data.poems[index];
+        if (!poem) {
+          main.textContent = "文章が見つかりません。";
+          return;
+        }
+        document.title = poem.title + " | hainedot";
+        main.replaceChildren();
+
+        const meta = document.createElement("p");
+        meta.className = "meta";
+        meta.textContent = poem.displayDate || "";
+        const heading = document.createElement("h1");
+        heading.textContent = poem.title || "";
+        main.append(meta, heading);
+
+        if (poem.image && poem.image !== "none") {
+          const photo = document.createElement("img");
+          photo.className = "essay-photo";
+          photo.src = "images/" + poem.image;
+          photo.alt = "";
+          main.appendChild(photo);
+        }
+
+        paragraphs(poem.lines || []).forEach((block) => {
+          const paragraph = document.createElement("p");
+          block.forEach((line, i) => {
+            if (i) paragraph.appendChild(document.createElement("br"));
+            paragraph.appendChild(document.createTextNode(line));
+          });
+          main.appendChild(paragraph);
+        });
+      })
+      .catch(() => {
+        main.textContent = "文章を読み込めませんでした。";
+      });
+  </script>
+</body>
+</html>
