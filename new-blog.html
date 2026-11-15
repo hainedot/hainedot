@@ -161,8 +161,7 @@
     }
 
     .about {
-      border-top: 1px solid var(--line);
-      padding: 90px 0 110px;
+      padding: 96px 0 120px;
     }
 
     .about-inner {
@@ -237,55 +236,6 @@
   </header>
 
   <main>
-    <section class="hero container">
-      <div class="small">AN INDEPENDENT LITERARY JOURNAL</div>
-      <h1>日々の余白に、言葉を置く。</h1>
-      <p>書き留めなければ、消えてしまうものたちへ。</p>
-      <div class="ornament"></div>
-    </section>
-
-    <section class="articles container" id="articles">
-      <div class="section-title">
-        <h2>Writings</h2>
-        <span>文章の記録</span>
-      </div>
-
-      <div class="article">
-        <time>ESSAY 001</time>
-        <div>
-          <h3>創作を続けられない人間の表現について</h3>
-          <p>
-            作り続けることだけが、表現なのだろうか。
-            何も生み出せなかった時間にも、言葉にならない何かが残っている。
-          </p>
-        </div>
-        <div class="category">ESSAY</div>
-      </div>
-
-      <div class="article">
-        <time>ESSAY 002</time>
-        <div>
-          <h3>結婚は贅沢か</h3>
-          <p>
-            誰かと暮らすこと。生活を選ぶこと。
-            愛情と経済のあいだにある、見えない境界について。
-          </p>
-        </div>
-        <div class="category">COLUMN</div>
-      </div>
-
-      <div class="article">
-        <time>ESSAY 003</time>
-        <div>
-          <h3>まだ名前のない文章</h3>
-          <p>
-            ここには、これから書かれる文章が並んでいきます。
-          </p>
-        </div>
-        <div class="category">NOTE</div>
-      </div>
-    </section>
-
     <section class="about" id="about">
       <div class="container about-inner">
         <h2>About</h2>
@@ -299,55 +249,5 @@
       </div>
     </section>
   </main>
-
-  <footer>
-    <div class="container footer-inner">
-      <span>© hainedot</span>
-      <span>WORDS, THOUGHTS & SILENCE.</span>
-    </div>
-  </footer>
-  <script>
-    function fillPoems(poems) {
-      const section = document.getElementById("articles");
-      const heading = section.querySelector(".section-title");
-      section.replaceChildren(heading);
-      poems.forEach((poem, index) => {
-        const article = document.createElement("div");
-        article.className = "article";
-
-        const parts = String(poem.displayDate || "").split("　");
-        const time = document.createElement("time");
-        time.textContent = parts[0] || "";
-
-        const body = document.createElement("div");
-        const title = document.createElement("h3");
-        const link = document.createElement("a");
-        link.href = "essay.html?n=" + index;
-        link.textContent = poem.title || "";
-        title.appendChild(link);
-
-        const excerpt = document.createElement("p");
-        const text = (poem.lines || []).filter((line) => String(line).trim()).join(" ");
-        excerpt.textContent = text.length > 80 ? text.slice(0, 80) + "…" : text;
-        body.append(title, excerpt);
-
-        const category = document.createElement("div");
-        category.className = "category";
-        category.textContent = parts[1] || "エッセイ";
-
-        article.append(time, body, category);
-        section.appendChild(article);
-      });
-    }
-
-    fetch("data/poems.json", { cache: "no-cache" })
-      .then((response) => (response.ok ? response.json() : null))
-      .then((data) => {
-        if (data && Array.isArray(data.poems) && data.poems.length) {
-          fillPoems(data.poems);
-        }
-      })
-      .catch(() => {});
-  </script>
 </body>
 </html>
