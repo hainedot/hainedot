@@ -30,7 +30,7 @@ jobs:
         run: |
           mkdir -p _site/images
           cp index.html new-blog.html profile.html contact.html CNAME _site/
-          cp images/profile.jpg _site/images/
+          cp images/profile.jpg images/profile-portrait.jpg _site/images/
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
