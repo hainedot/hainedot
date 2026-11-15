@@ -3,81 +3,109 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="このコーヒーが飲み終わるまで">
+  <meta name="description" content="まだ名前のない感情に、輪郭を。">
   <link rel="canonical" href="https://hainedot.com/">
   <title>hainedot</title>
   <script>
     if (location.pathname.endsWith("/index.html")) location.replace("/");
   </script>
   <style>
-    :root { color-scheme: light; }
     * { box-sizing: border-box; }
-    html, body { margin: 0; background: #fff; color: #1c1c1c; }
+    html, body { margin: 0; height: 100%; background: #111; }
     body {
+      color: #fff;
       font-family: "Yu Mincho", "YuMincho", "Hiragino Mincho ProN", "Noto Serif JP", serif;
-      line-height: 1.9;
     }
     a { color: inherit; text-decoration: none; }
-    a:hover { opacity: 0.6; }
-    header {
-      width: min(880px, calc(100% - 80px));
-      margin: 0 auto;
-      padding: 40px 0 0;
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 32px;
+    a:hover { opacity: 0.65; }
+    .cover {
+      position: relative;
+      height: 100vh;
+      height: 100dvh;
+      overflow: hidden;
     }
-    .brand { letter-spacing: 0.14em; font-size: 1rem; }
+    .cover img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: 68% center;
+    }
+    .shade {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, rgba(0, 0, 0, 0.42) 0%, rgba(0, 0, 0, 0.12) 46%, rgba(0, 0, 0, 0) 72%);
+    }
+    .site-nav {
+      position: absolute;
+      top: 28px;
+      right: 6vw;
+      z-index: 1;
+    }
     .site-nav ul {
       display: flex;
-      gap: 1.75rem;
+      gap: 1.4rem;
       list-style: none;
       margin: 0;
       padding: 0;
-      font-size: 0.92rem;
-      letter-spacing: 0.12em;
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      font-size: 11px;
+      letter-spacing: 0.16em;
     }
-    .hero {
-      display: block;
-      width: min(560px, calc(100% - 120px));
-      height: auto;
-      margin: 88px auto 0;
+    .copy {
+      position: absolute;
+      z-index: 1;
+      left: 6vw;
+      top: 26vh;
+      width: min(920px, 86vw);
     }
-    .line {
-      margin: 56px 24px 0;
-      font-size: 1.05rem;
-      letter-spacing: 0.12em;
-      text-align: center;
+    .kicker {
+      margin: 0 0 28px;
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      font-size: 11px;
+      letter-spacing: 0.22em;
     }
-    .place {
-      width: min(560px, calc(100% - 48px));
-      margin: 28px auto 120px;
-      font-size: 0.95rem;
-      letter-spacing: 0.06em;
-      text-align: center;
+    h1 {
+      margin: 0;
+      font-size: clamp(34px, 4.8vw, 68px);
+      font-weight: normal;
+      line-height: 1.35;
+      letter-spacing: 0.08em;
     }
+    .sub {
+      margin: 34px 0 0;
+      font-size: 14px;
+      letter-spacing: 0.14em;
+    }
+    .mark {
+      position: absolute;
+      z-index: 1;
+      bottom: 28px;
+      margin: 0;
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+    }
+    .mark-left { left: 6vw; }
+    .mark-right { right: 6vw; }
     @media (max-width: 640px) {
-      header {
-        width: min(880px, calc(100% - 48px));
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 20px;
-        padding-top: 32px;
-      }
-      .site-nav ul { gap: 1.15rem; }
-      .hero {
-        width: min(560px, calc(100% - 64px));
-        margin-top: 64px;
-      }
-      .line { margin-top: 40px; }
-      .place { margin-top: 20px; margin-bottom: 88px; }
+      .site-nav { top: 20px; right: 20px; }
+      .site-nav ul { gap: 0.8rem; font-size: 10px; }
+      .copy { left: 20px; top: 22vh; width: calc(100% - 40px); }
+      .kicker { font-size: 9px; letter-spacing: 0.14em; }
+      h1 { font-size: 32px; letter-spacing: 0.04em; }
+      .sub { font-size: 13px; }
+      .mark { bottom: 20px; font-size: 9px; }
+      .mark-left { left: 20px; }
+      .mark-right { right: 20px; }
     }
   </style>
 </head>
 <body>
-  <header>
-    <a class="brand" href="/">hainedot</a>
+  <section class="cover">
+    <img src="images/profile.jpg" alt="">
+    <div class="shade" aria-hidden="true"></div>
     <nav class="site-nav" aria-label="サイト">
       <ul>
         <li><a href="new-blog.html">エッセイ</a></li>
@@ -85,10 +113,13 @@
         <li><a href="contact.html">コンタクト</a></li>
       </ul>
     </nav>
-  </header>
-
-  <img class="hero" src="images/profile.jpg" alt="コーヒーを飲む横顔">
-  <p class="line">このコーヒーが飲み終わるまで</p>
-  <p class="place">hainedot. は、エッセイと言葉のための小さな場所です。</p>
+    <div class="copy">
+      <p class="kicker">HAINE DOT — AN INDEPENDENT LITERARY SPACE</p>
+      <h1>まだ名前のない感情に、<br>輪郭を。</h1>
+      <p class="sub">言葉になる前の、曖昧なものたちへ。</p>
+    </div>
+    <p class="mark mark-left">ESSAYS / FRAGMENTS / THE UNNAMED.</p>
+    <p class="mark mark-right">SCROLL ↓</p>
+  </section>
 </body>
 </html>
