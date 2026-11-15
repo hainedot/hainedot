@@ -42,9 +42,16 @@
       margin: 88px auto 0;
     }
     .line {
-      margin: 56px 24px 120px;
+      margin: 56px 24px 0;
       font-size: 1.05rem;
       letter-spacing: 0.12em;
+      text-align: center;
+    }
+    .place {
+      width: min(560px, calc(100% - 48px));
+      margin: 28px auto 120px;
+      font-size: 0.95rem;
+      letter-spacing: 0.06em;
       text-align: center;
     }
     @media (max-width: 640px) {
@@ -61,6 +68,7 @@
         margin-top: 64px;
       }
       .line { margin-top: 40px; }
+      .place { margin-top: 20px; margin-bottom: 88px; }
     }
   </style>
 </head>
@@ -78,5 +86,6 @@
 
   <img class="hero" src="images/profile.jpg" alt="コーヒーを飲む横顔">
   <p class="line">このコーヒーが飲み終わるまで</p>
+  <p class="place">hainedot. は、エッセイと言葉のための小さな場所です。</p>
 </body>
 </html>
