@@ -6,6 +6,9 @@
   <meta name="description" content="このコーヒーが飲み終わるまで">
   <link rel="canonical" href="https://hainedot.com/">
   <title>hainedot</title>
+  <script>
+    if (location.pathname.endsWith("/index.html")) location.replace("/");
+  </script>
   <style>
     :root { color-scheme: light; }
     * { box-sizing: border-box; }
@@ -74,7 +77,7 @@
 </head>
 <body>
   <header>
-    <a class="brand" href="index.html">hainedot</a>
+    <a class="brand" href="/">hainedot</a>
     <nav class="site-nav" aria-label="サイト">
       <ul>
         <li><a href="new-blog.html">エッセイ</a></li>

@@ -238,7 +238,7 @@ function essayPage({ title, body, label, category, imageName }) {
 </head>
 <body>
   <header>
-    <a class="brand" href="../index.html">hainedot</a>
+    <a class="brand" href="/">hainedot</a>
     <nav aria-label="サイト">
       <ul>
         <li><a href="../new-blog.html">エッセイ</a></li>
