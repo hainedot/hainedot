@@ -29,7 +29,7 @@ jobs:
       - name: Prepare site
         run: |
           mkdir -p _site/images _site/post _site/data
-          cp index.html new-blog.html profile.html contact.html essay.html CNAME _site/
+          cp index.html new-blog.html about.html profile.html contact.html essay.html CNAME _site/
           cp post/index.html post/post.js post/config.js _site/post/
           cp data/poems.json _site/data/
           find images -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' -o -iname '*.gif' \) -exec cp {} _site/images/ \;
