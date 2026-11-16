@@ -39,13 +39,13 @@
     }
     .site-nav {
       position: absolute;
-      top: 28px;
-      right: 6vw;
+      top: 40px;
+      right: max(40px, calc((100% - 880px) / 2));
       z-index: 1;
     }
     .site-nav ul {
       display: flex;
-      gap: 1.4rem;
+      gap: 1.75rem;
       list-style: none;
       margin: 0;
       padding: 0;
@@ -79,8 +79,6 @@
       letter-spacing: 0.14em;
     }
     @media (max-width: 640px) {
-      .site-nav { top: 20px; right: 20px; }
-      .site-nav ul { gap: 0.8rem; font-size: 10px; }
       .copy { left: 20px; top: 22vh; width: calc(100% - 40px); }
       .kicker { font-size: 9px; letter-spacing: 0.14em; }
       h1 { font-size: 32px; letter-spacing: 0.04em; }
@@ -95,6 +93,7 @@
     <nav class="site-nav" aria-label="サイト">
       <ul>
         <li><a href="new-blog.html">エッセイ</a></li>
+        <li><a href="about.html">アバウト</a></li>
         <li><a href="profile.html">プロフィール</a></li>
         <li><a href="contact.html">コンタクト</a></li>
       </ul>

@@ -13,11 +13,15 @@
       line-height: 1.8;
     }
     a { color: inherit; }
-    header, main {
-      width: min(640px, calc(100% - 48px));
-      margin: 0 auto;
+    header, main { margin: 0 auto; }
+    header {
+      width: min(880px, calc(100% - 80px));
+      padding: 40px 0 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
     }
-    header { padding: 36px 0 0; display: flex; justify-content: space-between; align-items: baseline; }
+    main { width: min(640px, calc(100% - 48px)); }
     .brand { letter-spacing: 0.14em; text-decoration: none; }
     h1 { margin: 48px 0 8px; font-size: 1.05rem; font-weight: normal; letter-spacing: 0.14em; }
     .lead { margin: 0 0 28px; }
@@ -50,6 +54,7 @@
   <header>
     <a class="brand" href="/">hainedot</a>
     <a href="../new-blog.html">エッセイ</a>
+    <a href="../about.html">アバウト</a>
   </header>
   <main>
     <h1>投稿</h1>

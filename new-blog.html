@@ -46,24 +46,25 @@
     }
 
     .header-inner {
+      width: min(880px, calc(100% - 80px));
       display: flex;
-      align-items: center;
+      align-items: baseline;
       justify-content: space-between;
-      min-height: 96px;
-      gap: 24px;
+      padding: 40px 0 0;
+      gap: 32px;
     }
 
     .logo {
       font-family: Georgia, serif;
-      font-size: 28px;
+      font-size: 1rem;
       letter-spacing: -.06em;
       font-weight: normal;
     }
 
     nav {
       display: flex;
-      gap: 28px;
-      font-size: 12px;
+      gap: 1.75rem;
+      font-size: 0.92rem;
       letter-spacing: .1em;
     }
 
@@ -74,12 +75,12 @@
 
     .hero .small {
       color: var(--sub);
-      font-size: 11px;
+      font-size: 0.8rem;
       letter-spacing: .3em;
     }
 
     .hero h1 {
-      font-size: clamp(25px, 4vw, 39px);
+      font-size: 0.92rem;
       font-weight: normal;
       letter-spacing: .18em;
       line-height: 1.8;
@@ -88,7 +89,7 @@
 
     .hero p {
       color: var(--sub);
-      font-size: 13px;
+      font-size: 1rem;
       letter-spacing: .1em;
     }
 
@@ -111,13 +112,13 @@
     .section-title h2 {
       font-family: Georgia, serif;
       font-weight: normal;
-      font-size: 23px;
+      font-size: 0.92rem;
       margin: 0;
       letter-spacing: .03em;
     }
 
     .section-title span {
-      font-size: 11px;
+      font-size: 0.8rem;
       color: var(--sub);
       letter-spacing: .12em;
     }
@@ -136,11 +137,11 @@
     .article time {
       font-family: Georgia, serif;
       color: var(--sub);
-      font-size: 12px;
+      font-size: 0.8rem;
     }
 
     .article h3 {
-      font-size: 19px;
+      font-size: 0.92rem;
       font-weight: normal;
       margin: 0 0 12px;
       letter-spacing: .05em;
@@ -148,13 +149,13 @@
 
     .article p {
       margin: 0;
-      font-size: 12px;
+      font-size: 1rem;
       line-height: 2.2;
       color: var(--sub);
     }
 
     .category {
-      font-size: 10px;
+      font-size: 0.8rem;
       color: var(--sub);
       text-align: right;
       letter-spacing: .1em;
@@ -172,13 +173,13 @@
 
     .about h2 {
       font-family: Georgia, serif;
-      font-size: 23px;
+      font-size: 0.92rem;
       font-weight: normal;
       margin: 0 0 30px;
     }
 
     .about p {
-      font-size: 13px;
+      font-size: 1rem;
       line-height: 2.8;
       color: #55534f;
     }
@@ -187,7 +188,7 @@
       border-top: 1px solid var(--line);
       padding: 38px 0;
       font-family: Georgia, serif;
-      font-size: 11px;
+      font-size: 0.8rem;
       color: var(--sub);
     }
 
@@ -198,12 +199,6 @@
     }
 
     @media (max-width: 650px) {
-      .header-inner {
-        min-height: 78px;
-      }
-
-      .logo { font-size: 24px; }
-      nav { gap: 15px; font-size: 11px; }
       .hero { padding: 95px 0 90px; }
 
       .article {
@@ -216,7 +211,7 @@
         margin-bottom: 12px;
       }
 
-      .article h3 { font-size: 17px; }
+      .article h3 { font-size: 0.92rem; }
       .category { margin-top: 14px; text-align: left; }
       .about { padding: 75px 0; }
     }
@@ -229,6 +224,7 @@
       <a class="logo" href="/">hainedot</a>
       <nav>
         <a href="new-blog.html">エッセイ</a>
+        <a href="about.html">アバウト</a>
         <a href="profile.html">プロフィール</a>
         <a href="contact.html">コンタクト</a>
       </nav>
