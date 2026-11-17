@@ -12,14 +12,17 @@
     a:hover { opacity: 0.6; }
     header { width: min(880px, calc(100% - 80px)); margin: 0 auto; padding: 40px 0 0; display: flex; align-items: baseline; justify-content: space-between; gap: 32px; }
     .brand { letter-spacing: 0.14em; font-size: 1rem; }
-    nav ul { display: flex; gap: 1.75rem; list-style: none; margin: 0; padding: 0; letter-spacing: 0.12em; font-size: 0.92rem; }
+    nav ul { display: flex; flex-wrap: wrap; gap: 1.75rem; list-style: none; margin: 0; padding: 0; letter-spacing: 0.12em; font-size: 0.92rem; }
+    nav a { white-space: nowrap; }
     main { width: min(640px, calc(100% - 80px)); margin: 72px auto 120px; }
     .meta { margin: 0; letter-spacing: 0.12em; font-size: 0.8rem; }
     h1 { margin: 18px 0 28px; font-size: 0.92rem; font-weight: normal; letter-spacing: 0.06em; line-height: 1.6; }
     .essay-photo { display: block; width: 100%; height: auto; margin: 0 0 32px; }
     p { margin: 0 0 1.4em; }
-    @media (max-width: 640px) {
-      main { width: min(880px, calc(100% - 48px)); }
+    @media (max-width: 700px) {
+      header { width: calc(100% - 40px); flex-direction: column; align-items: flex-start; gap: 14px; padding-top: 28px; }
+      nav ul { gap: 0.55rem 1.1rem; }
+      main { width: calc(100% - 40px); margin-top: 48px; }
     }
   </style>
 </head>

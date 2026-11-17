@@ -28,6 +28,7 @@
     .brand { letter-spacing: 0.14em; font-size: 1rem; }
     .site-nav ul {
       display: flex;
+      flex-wrap: wrap;
       gap: 1.75rem;
       list-style: none;
       margin: 0;
@@ -35,6 +36,7 @@
       font-size: 0.92rem;
       letter-spacing: 0.12em;
     }
+    .site-nav a { white-space: nowrap; }
     main {
       width: min(560px, calc(100% - 80px));
       margin: 96px auto 120px;
@@ -47,11 +49,19 @@
     }
     p { margin: 0; }
     .contact { margin: 28px 0 0; padding-left: 1.15rem; }
-    .contact a { text-decoration: underline; text-underline-offset: 0.2em; }
-    @media (max-width: 640px) {
+    .contact a { text-decoration: underline; text-underline-offset: 0.2em; overflow-wrap: anywhere; }
+    @media (max-width: 700px) {
+      header {
+        width: calc(100% - 40px);
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 14px;
+        padding-top: 28px;
+      }
+      .site-nav ul { gap: 0.55rem 1.1rem; }
       main {
-        width: min(560px, calc(100% - 48px));
-        margin-top: 72px;
+        width: calc(100% - 40px);
+        margin-top: 56px;
       }
     }
   </style>

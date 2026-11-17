@@ -28,6 +28,7 @@
     .brand { letter-spacing: 0.14em; font-size: 1rem; }
     .site-nav ul {
       display: flex;
+      flex-wrap: wrap;
       gap: 1.75rem;
       list-style: none;
       margin: 0;
@@ -35,6 +36,7 @@
       font-size: 0.92rem;
       letter-spacing: 0.12em;
     }
+    .site-nav a { white-space: nowrap; }
     main {
       width: min(560px, calc(100% - 80px));
       margin: 96px auto 120px;
@@ -46,10 +48,18 @@
       letter-spacing: 0.18em;
     }
     p { margin: 0; }
-    @media (max-width: 640px) {
+    @media (max-width: 700px) {
+      header {
+        width: calc(100% - 40px);
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 14px;
+        padding-top: 28px;
+      }
+      .site-nav ul { gap: 0.55rem 1.1rem; }
       main {
-        width: min(560px, calc(100% - 48px));
-        margin-top: 72px;
+        width: calc(100% - 40px);
+        margin-top: 56px;
       }
     }
   </style>

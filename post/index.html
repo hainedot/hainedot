@@ -22,6 +22,10 @@
       align-items: baseline;
     }
     main { width: min(640px, calc(100% - 48px)); }
+    @media (max-width: 700px) {
+      header, main { width: calc(100% - 40px); }
+      header { flex-wrap: wrap; gap: 12px 20px; }
+    }
     .brand { letter-spacing: 0.14em; text-decoration: none; }
     h1 { margin: 48px 0 8px; font-size: 1.05rem; font-weight: normal; letter-spacing: 0.14em; }
     .lead { margin: 0 0 28px; }

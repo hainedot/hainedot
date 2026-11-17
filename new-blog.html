@@ -63,10 +63,12 @@
 
     nav {
       display: flex;
+      flex-wrap: wrap;
       gap: 1.75rem;
       font-size: 0.92rem;
       letter-spacing: .1em;
     }
+    nav a { white-space: nowrap; }
 
     .hero {
       padding: 135px 0 125px;
@@ -198,7 +200,15 @@
       gap: 20px;
     }
 
-    @media (max-width: 650px) {
+    @media (max-width: 700px) {
+      .header-inner {
+        width: calc(100% - 40px);
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 14px;
+        padding-top: 28px;
+      }
+      nav { gap: 0.55rem 1.1rem; }
       .hero { padding: 95px 0 90px; }
 
       .article {
